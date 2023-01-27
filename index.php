@@ -1,3 +1,5 @@
+<?php include "header.php"; ?>
+
 <?php
 set_time_limit(300);
 $domain = '';
@@ -6,20 +8,26 @@ if (!empty($_POST['domain'])) {
 }
 ?>
 
+
+
 <form method="post" action="<?=$_SERVER['PHP_SELF']?>">
-    Domínio/IP: 
-    <input type="text" name="domain" value="<?=$domain?>" /> 
-    <br/>
-    <input type="submit" value="Les go" />
-</form> 
+  <div class="mb-3 mt-3">
+    <label for="text" class="form-label">Domínio/IP:</label>
+    <input type="text" class="form-control" value="<?=$domain?>" id="domain" placeholder="locaweb.com.br" name="domain">
+  </div>
+   <button type="submit" class="btn btn-primary">Les Go</button>
+</form>
+
+<hr>  
 
 
+<div id="resultado">
 <?php
 
 // Scan de portas ativas 
 
 $step = 1;
-$portas = ['21', '22', '80', '443', '1194', '3306','3389', '5432'];
+$portas = ['21', '22', '80', '443', '1194', '1433','3306','3389', '5432'];
 
 if(!empty($_POST['domain'])) {
 
@@ -61,18 +69,23 @@ if(!empty($_POST['domain'])) {
     $servidor = substr($ipreverso, 0, strpos($ipreverso, "."));
     echo "<br/><b>IP do site/Servidor </b>: $ip<br/>";
 
-    echo "<b> DNS Reverso:</b> $ipreverso <br/>";
+    echo "<b> DNS Reverso:</b> $ipreverso <br/>  ";
 }
 ?>
+
+
 
 
 <?php
 
 if(!empty($_POST['domain'])) {
+
+
 // Ping no site/IP
     $output = shell_exec("ping -c5 $domain");
     echo "<br/><b> Ping: </b> <br/>";
-    echo "<pre>$output</pre>";
+    echo "<pre>$output</pre><hr> ";
+
 }
  ?>
 
@@ -119,27 +132,39 @@ if(!empty($_POST['domain'])) {
 // Busca de SOA
     $soa = dns_get_record($domain, DNS_SOA);
     echo "<b> SOA: </b><br/>";
+    echo "Host: ";
     echo $soa[0]["host"];
     echo "<br>";
+    echo "TTL: ";
     echo $soa[0]["ttl"];
     echo "<br>";
+    echo "Autoridade: ";
     echo $soa[0]["mname"];
     echo "<br>";
+    echo "Contato administrativo: ";
     echo $soa[0]["rname"];
     echo "<br>";
+    echo "Serial: ";
     echo $soa[0]["serial"];
     echo "<br>";
+    echo "Refresh: ";
     echo $soa[0]["refresh"];
     echo "<br>";
+    echo "Retry: ";
     echo $soa[0]["retry"];
     echo "<br>";
+    echo "Expire: ";
     echo $soa[0]["expire"];
     echo "<br>";
+    echo "TTL minímo: ";
     echo $soa[0]["minimum-ttl"];
 
 
 
-    echo "<br><br><br>";
+    echo "<br><br><br><hr> ";
 
 }
  ?>
+
+</div>
+<?php include "footer.php"; ?>
